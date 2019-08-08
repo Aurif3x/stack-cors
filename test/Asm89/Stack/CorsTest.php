@@ -194,6 +194,24 @@ class CorsTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_adds_vary_origin_to_all_responses_when_configured()
+    {
+        //$app      = $this->createStackedApp(array('enforceVaryOrigin' => true), array('Vary' => 'Content-Type'));
+        $app     = $this->createStackedApp(array('enforceVaryOrigin' => true));
+
+        //$request  = $this->createValidActualRequest();
+        //$response = $app->handle($request);
+
+        $unmodifiedResponse = new Response();
+        $response = $app->handle(new Request());
+
+        $this->assertTrue($response->headers->has('Vary'));
+        $this->assertEquals('Content-Type, Origin', $response->headers->get('Vary'));
+    }
+
+    /**
+     * @test
+     */
     public function it_returns_access_control_headers_on_cors_request()
     {
         $app      = $this->createStackedApp();
@@ -442,6 +460,7 @@ class CorsTest extends PHPUnit_Framework_TestCase
                 'exposedHeaders'      => false,
                 'maxAge'              => false,
                 'supportsCredentials' => false,
+                'enforceVaryOrigin'   => false,
             ),
             $options
         );

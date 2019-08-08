@@ -29,6 +29,7 @@ This package can be used as a library or as [stack middleware].
 | exposedHeaders         | Sets the Access-Control-Expose-Headers response header.    | `false`       |
 | maxAge                 | Sets the Access-Control-Max-Age response header.           | `false`       |
 | supportsCredentials    | Sets the Access-Control-Allow-Credentials header.          | `false`       |
+| enforceVaryOrigin      | Sets the Vary: Origin header for _all_ responses.          | `false`       |
 
 The _allowedMethods_ and _allowedHeaders_ options are case-insensitive.
 
@@ -51,6 +52,7 @@ $cors = new CorsService(array(
     'exposedHeaders'         => false,
     'maxAge'                 => false,
     'supportsCredentials'    => false,
+    'enforceVaryOrigin'      => false,
 ));
 
 $cors->addActualRequestHeaders(Response $response, $origin);
@@ -79,5 +81,6 @@ $app = new Cors($app, array(
     'exposedHeaders'      => false,
     'maxAge'              => false,
     'supportsCredentials' => false,
+    'enforceVaryOrigin'   => false,
 ));
 ```

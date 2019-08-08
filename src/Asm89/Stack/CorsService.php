@@ -34,6 +34,7 @@ class CorsService
             'exposedHeaders' => array(),
             'allowedMethods' => array(),
             'maxAge' => 0,
+            'enforceVaryOrigin' => false,
         );
 
         // normalize array('*') to true

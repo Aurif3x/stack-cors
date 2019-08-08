@@ -35,6 +35,7 @@ class Cors implements HttpKernelInterface
         'exposedHeaders'         => false,
         'maxAge'                 => false,
         'supportsCredentials'    => false,
+        'enforceVaryOrigin'      => false,
     );
 
     public function __construct(HttpKernelInterface $app, array $options = array())

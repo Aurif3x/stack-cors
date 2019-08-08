@@ -107,6 +107,18 @@ class CorsService
         return $this->buildPreflightCheckResponse($request);
     }
 
+    public function enforceVaryOrigin(Response $response)
+    {
+        if ($this->options['enforceVaryOrigin']) {
+            if (!$response->headers->has('Vary')) {
+                $response->headers->set('Vary', 'Origin');
+            } else {
+                $response->headers->set('Vary', $response->headers->get('Vary') . ', Origin');
+            }
+        }
+        return $response;
+    }
+
     private function buildPreflightCheckResponse(Request $request)
     {
         $response = new Response();

@@ -11,12 +11,12 @@
 
 namespace Asm89\Stack;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CorsTest extends PHPUnit_Framework_TestCase
+class CorsTest extends TestCase
 {
     /**
      * @test
@@ -200,13 +200,19 @@ class CorsTest extends PHPUnit_Framework_TestCase
         $app     = $this->createStackedApp(array('enforceVaryOrigin' => true));
 
         //$request  = $this->createValidActualRequest();
-        //$response = $app->handle($request);
+        //$request = $this->createValidPreflightRequest();
+        $request = new Request();
 
-        $unmodifiedResponse = new Response();
-        $response = $app->handle(new Request());
+        $response = $app->handle($request);
+
+        //$isCORS = ($request->headers->has('Origin') && ($request->headers->get('Origin') === $request->getSchemeAndHttpHost()));
+        //$this->assertTrue($isCORS);
+        
+        //$this->assertTrue($app->cors->isPreflightRequest($request));
+        //$this->assertTrue(!$this->cors->isActualRequestAllowed($request));
 
         $this->assertTrue($response->headers->has('Vary'));
-        $this->assertEquals('Content-Type, Origin', $response->headers->get('Vary'));
+        $this->assertContains('Origin', $response->headers->get('Vary'));
     }
 
     /**

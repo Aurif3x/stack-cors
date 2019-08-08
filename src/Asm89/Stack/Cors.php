@@ -46,20 +46,26 @@ class Cors implements HttpKernelInterface
 
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
+        $finalResponse;
+
         if (!$this->cors->isCorsRequest($request)) {
-            return $this->app->handle($request, $type, $catch);
+            $finalResponse = $this->app->handle($request, $type, $catch);
         }
 
-        if ($this->cors->isPreflightRequest($request)) {
-            return $this->cors->handlePreflightRequest($request);
+        else if ($this->cors->isPreflightRequest($request)) {
+            $finalResponse = $this->cors->handlePreflightRequest($request);
         }
 
-        if (!$this->cors->isActualRequestAllowed($request)) {
-            return new Response('Not allowed.', 403);
+        else if (!$this->cors->isActualRequestAllowed($request)) {
+            $finalResponse = new Response('Not allowed.', 403);
         }
 
-        $response = $this->app->handle($request, $type, $catch);
+        else {
+            $response = $this->app->handle($request, $type, $catch);
+            $finalResponse = $this->cors->addActualRequestHeaders($response, $request);
+        }
 
-        return $this->cors->addActualRequestHeaders($response, $request);
+        $finalResponse = $this->cors->enforceVaryOrigin($finalResponse);
+        return $finalResponse;
     }
 }
